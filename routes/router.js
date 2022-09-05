@@ -47,5 +47,37 @@ router.post('/login', async(req,res) =>{
     }
     res.json({status : 'error' , error: 'Username or Password is Incorrect'})
 })
+router.get('/read', async(req,res) => {
+    userRegistration.find({}, (err,result) =>{
+        if(err){
+            res.send(err)
+        }
+        res.send(result)
+    })
+
+})
+router.delete('/delete/:id', async(req,res) => {
+   
+   try{
+    await userRegistration.findByIdAndDelete({_id: req.params.id});
+    res.status(201).json("User deleted")
+   }
+   catch(err){
+    res.status(409).json({message: err.message})
+   }
+})
+router.put('/update/:id', async(req,res) => {
+ 
+    try{
+     await userRegistration.findByIdAndUpdate({_id: req.params.id}, {
+         $set: req.body
+     });
+     res.status(201).json("User Updated")
+    }
+    catch(err){
+     res.status(409).json({message: err.message})
+    }
+ })
+
 
 module.exports = router
